@@ -64,7 +64,8 @@ try {
     }
     if ($apiKey) { $headers["Authorization"] = "Bearer $apiKey" }
 
-    $response = Invoke-RestMethod -Uri $apiEndpoint -Method Post -ContentType "application/json" -Body $jsonData
+    $response = Invoke-RestMethod -Uri $apiEndpoint -Method Post -ContentType "application/json" -Headers $headers -Body $jsonData
+
 
     Write-Host "Données envoyées avec succès !"
     Write-Host "Réponse du serveur : $response"
