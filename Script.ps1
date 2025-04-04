@@ -19,20 +19,8 @@ $domaine = (Get-WmiObject Win32_ComputerSystem).Domain
 
 
 # Récupération de la clé Windows et de l'état d'activation
-$licenseStatus = (Get-WmiObject SoftwareLicensingProduct | Where-Object { $_.PartialProductKey } | Select-Object LicenseStatus).LicenseStatus
+$licenseStatus = (Get-WmiObject SoftwareLicensingProduct | Where-Object { $_.PartialProductKey } | Select-Object LicenseStatus).LicenseStatus 
 $windowsKey = (Get-WmiObject SoftwareLicensingService).OA3xOriginalProductKey
-
-
-
-# Définition de l'état de la licence
-$licenseState = switch ($licenseStatus) {
-    0 { "Non activé" }
-    1 { "Activé" }
-    2 { "État inconnu" }
-    3 { "Périmé" }
-    4 { "État d'activation inconnu" }
-    default { "Non défini" }
-}
 
 $WindowsKey = if ($windowsKey) { $windowsKey } else { "null" }
 $serial = if ($serial) { $serial } else { "null" }
@@ -51,8 +39,8 @@ $body = @{
     "ip"           = $ipAddress
     "domaine"      = $domaine
     "windows_key"  = $windowsKey
-    "license_status" = $licenseState # Numéro de 1 à 5 : 0 → Non activé, 1 → Activé, 2 → Clé de licence manquante, 3 → Expiré, 4 → Bloqué, 5 → Clé non valide
-} #| ConvertTo-Json -Depth 3
+    "license_status" = $licenseStatus
+    } #| ConvertTo-Json -Depth 3
 $jsonData = $body | ConvertTo-Json
 Write-Host "données JSON envoyée : $jsonData"
 
