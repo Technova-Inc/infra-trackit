@@ -13,7 +13,7 @@ $user = $env:USERNAME
 $ram = [math]::Round(((Get-WmiObject Win32_ComputerSystem).TotalPhysicalMemory / 1GB), 2)
 $cpu = (Get-WmiObject Win32_Processor).Name -join ", "
 $serial = ((Get-WmiObject Win32_BIOS).SerialNumber) -as [string]
-$macAddress = (Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object { $_.IPEnabled -eq $true }).MACAddress
+$macAddress = (Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object { $_.IPEnabled -eq $true }).MACAddress[0]
 $ipAddress = (Get-WmiObject Win32_NetworkAdapterConfiguration | Where-Object { $_.IPEnabled -eq $true }).IPAddress[0]
 $domaine = (Get-WmiObject Win32_ComputerSystem).Domain
 
@@ -43,6 +43,9 @@ $body = @{
     } #| ConvertTo-Json -Depth 3
 $jsonData = $body | ConvertTo-Json
 Write-Host "données JSON envoyée : $jsonData"
+
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+
 
 # Envoi de la requête à l'API d'OCS Inventory
 try {
