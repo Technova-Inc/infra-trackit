@@ -22,7 +22,7 @@ $windowsKey = (Get-WmiObject SoftwareLicensingService).OA3xOriginalProductKey
 $windowsKey = if ($windowsKey) { $windowsKey } else { "null" }
 $serial = if ($serial) { $serial } else { "null" }
 
-# Récupération du statut de licence et traduction en français
+# Récupération du statut de licence
 $rawLicenseStatus = (Get-WmiObject SoftwareLicensingProduct | Where-Object { $_.PartialProductKey } | Select-Object -First 1 -ExpandProperty LicenseStatus)
 
 switch ($rawLicenseStatus) {
